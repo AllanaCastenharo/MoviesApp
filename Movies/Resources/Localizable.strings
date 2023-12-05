@@ -1,0 +1,13 @@
+/*
+  Localizable.strings
+  Movies
+
+  Created by Allana Castenharo Santamaria on 04/06/22.
+  
+*/
+
+// Intro
+
+"Intro.titleLabel" = "Assista filmes quando e onde quiser";
+"Intro.descriptionLabel" = "Uma biblioteca completa, com filmes de todos os gêneros para você assistir em qualquer momento.";
+"Intro.buttonWelcome" = "Seja Bem-vindo";

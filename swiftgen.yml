@@ -1,0 +1,13 @@
+strings:
+  inputs: Movies/Resources/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      params:
+        enumName: Localization
+      output: Movies/Resources/Generated/Strings.swift
+xcassets:
+  inputs:
+    - Movies/Resources/Assets.xcassets
+  outputs:
+    - templateName: swift5
+      output: Movies/Resources/Generated/Images.swift
