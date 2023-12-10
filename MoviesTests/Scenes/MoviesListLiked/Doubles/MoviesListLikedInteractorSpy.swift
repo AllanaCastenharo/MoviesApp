@@ -1,5 +1,5 @@
 //
-//  MoviesListInteractorSpy.swift
+//  MoviesListLikedInteractorSpy.swift
 //  MoviesTests
 //
 //  Created by Allana Castenharo Santamaria on 05/12/23.
@@ -8,7 +8,7 @@
 import Foundation
 @testable import Movies
 
-class MoviesListInteractorSpy: MoviesListInteractorProtocol {
+class MoviesListLikedInteractorSpy: MoviesListInteractorProtocol {
     enum Method: Equatable {
         case openDetailCalled(index: Int)
         case fetchDataCalled

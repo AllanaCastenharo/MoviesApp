@@ -29,8 +29,10 @@ class MovieViewCell: UICollectionViewCell {
     }()
     
     var likedTapped: (() -> Void)?
+    var shouldReuse = false
     
-    func setup(isFavoriteMovie: Bool,url: String, description: String, likedTapped: (() -> Void)? = nil) {
+    func setup(shouldReuse: Bool,isFavoriteMovie: Bool,url: String, description: String, likedTapped: (() -> Void)? = nil) {
+        self.shouldReuse =  shouldReuse
         self.likedTapped = likedTapped
         downloadImage(from: URL(string: "https://image.tmdb.org/t/p/w500" + url))
         descriptionLabel.text = description
@@ -107,7 +109,13 @@ extension MovieViewCell: ViewCode {
         chache.getImage(from: url) { image, error in
             if let image = image {
                 DispatchQueue.main.async {
-                    self.imageMovie.image = image
+                    UIView.transition(
+                        with: self.imageMovie,
+                        duration: 0.3,
+                        options: .transitionCrossDissolve) {
+                            self.imageMovie.image = image
+
+                        }
                 }
             }
         }

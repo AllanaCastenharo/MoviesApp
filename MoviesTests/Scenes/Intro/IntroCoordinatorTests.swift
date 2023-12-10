@@ -14,7 +14,7 @@ final class IntroCoordinatorTests: XCTestCase {
         
         sut.showMovies()
         
-        XCTAssertTrue(navigationSpy.pushedViewController is MoviesListViewController)
+        XCTAssertTrue(navigationSpy.pushedViewController is MoviesTabBarController)
         XCTAssertEqual(navigationSpy.pushViewControllerCallCount, 2)
     }
 }

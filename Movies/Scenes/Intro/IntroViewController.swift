@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class IntroViewController: MoviesViewController<IntroInteracting> {
+final class IntroViewController: MoviesViewController<IntroInteractorProtocol> {
     typealias Strings = Localization.Intro
     
     private var imageView: UIImageView = {

@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol IntroCoordinating: AnyObject {
+protocol IntroCoordinatorProtocol: AnyObject {
     func showMovies()
 }
 
@@ -15,7 +15,7 @@ final class IntroCoordinator {
     weak var viewController: UIViewController?
 }
 
-extension IntroCoordinator: IntroCoordinating {
+extension IntroCoordinator: IntroCoordinatorProtocol {
     func showMovies() {
         let tabbar = MoviesTabBarController()
         viewController?.navigationController?.pushViewController(tabbar, animated: true)

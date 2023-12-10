@@ -7,13 +7,19 @@
 
 import Foundation
 
-protocol MoviesListServicing: AnyObject {
-    func fetch(completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void)
+protocol MoviesListServiceProtocol: AnyObject {
+    func fetch(page: Int , completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void)
+    func fetch(search: String, page: Int, completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void)
 }
 
-final class MoviesListService: MoviesListServicing {    
-    func fetch(completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {
-        let request = MovieListRequest()
+extension MoviesListServiceProtocol {
+    func fetch(search: String, page: Int, completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {}
+    func fetch(page: Int, completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {}
+}
+
+final class MoviesListService: MoviesListServiceProtocol {    
+    func fetch(page: Int, completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {
+        let request = MovieListRequest(page: page)
         NetworkSession.shared.request(request: request) { (result: Result<MoviesResponse?, NetworkError>) in
             DispatchQueue.main.async {
                 switch result {
@@ -36,8 +42,7 @@ class MovieListRequest: NetworkRequestProtocol {
         "https://api.themoviedb.org"
     }
     var path: String {
-        "/3/movie/popular?language=pt-BR&api_key=dec91e4ff4c07896d52fb093225b685f"
-//        "/3/search/movie?query=Popular&api_key=dec91e4ff4c07896d52fb093225b685f"
+        "/3/movie/popular?language=pt-BR&page=\(page)&api_key=dec91e4ff4c07896d52fb093225b685f"
     }
     
     var method: HTTPMethod {
@@ -45,4 +50,10 @@ class MovieListRequest: NetworkRequestProtocol {
     }
     var headers: [String: String]?
     var parameters: [String: Any]?
+    
+    let page: Int
+    
+    init(page: Int) {
+        self.page = page
+    }
 }

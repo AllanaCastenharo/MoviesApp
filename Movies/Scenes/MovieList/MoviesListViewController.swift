@@ -7,18 +7,36 @@
 
 import UIKit
 import SwiftUI
-protocol MovieListDisplaying: AnyObject {
+protocol MovieListViewControllerProcotol: AnyObject {
     func updateView()
+    func updateNewItems(indexPaths: [IndexPath])
+    func startLoading()
+    func stopLoading()
 }
 
-class MoviesListViewController: MoviesViewController<MoviesListInteracting> {
+class MoviesListViewController: MoviesViewController<MoviesListInteractorProtocol> {
     typealias Strings = Localization.Intro
+    var indexLoaded = 0
+
+    var loadingView: LoadingView?
     
-    private lazy var collectionView: UICollectionView = {
+    var emptyView: EmptyView = {
+        let emptyView = EmptyView()
+        return emptyView
+    }()
+    
+    var container: UIView = {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        return container
+    }()
+    
+    lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(MovieViewCell.self, forCellWithReuseIdentifier: String(describing: MovieViewCell.self))
         collectionView.dataSource = self
         collectionView.delegate = self
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
 
@@ -30,15 +48,12 @@ class MoviesListViewController: MoviesViewController<MoviesListInteracting> {
         layout.scrollDirection = .vertical
         return layout
     }()
-
+    @objc 
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        interactor.fetchData()
+        interactor.fetchData(searchText: nil)
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -47,20 +62,24 @@ class MoviesListViewController: MoviesViewController<MoviesListInteracting> {
     }
 }
 
-extension MoviesListViewController: ViewCode {
+@objc extension MoviesListViewController: ViewCode {
     func buildViewHierarchy() {
-        view.addSubview(collectionView)
+        container.addSubview(collectionView)
+        view.addSubview(container)
         
     }
     
     func setupConstraints() {
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            container.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            container.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            collectionView.topAnchor.constraint(equalTo: container.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         ])
         
     }
@@ -68,7 +87,6 @@ extension MoviesListViewController: ViewCode {
     func setupAdditionalConfiguration() {
         view.backgroundColor = .white
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
-        navigationController?.title = "Lista de Filmes"
     }
     
 }
@@ -84,10 +102,13 @@ extension MoviesListViewController: UICollectionViewDataSource {
         
         let isFavoriteMovie = interactor.isFavoriteMovie(index: indexPath.row)
         let url = interactor.model?.results[indexPath.row].posterPath ?? ""
+        let title = interactor.model?.results[indexPath.row].title ??
+            interactor.model?.results[indexPath.row].name
         cell?.setup(
+            shouldReuse: indexLoaded > indexPath.row,
             isFavoriteMovie: isFavoriteMovie,
             url: url,
-            description: interactor.model?.results[indexPath.row].title ?? String(),
+            description:  title ?? String(),
             likedTapped: { [weak self] in
                 guard let self = self else { return }
                 self.interactor.saveLocalStorage(index: indexPath.row) {
@@ -95,6 +116,7 @@ extension MoviesListViewController: UICollectionViewDataSource {
                 }
             }
         )
+        indexLoaded = indexPath.row
         return cell ?? UICollectionViewCell()
         
     }
@@ -107,9 +129,33 @@ extension MoviesListViewController: UICollectionViewDelegate {
     }
 }
 
-extension MoviesListViewController: MovieListDisplaying {
+extension MoviesListViewController: MovieListViewControllerProcotol {
+
+    func startLoading() {
+        loadingView = LoadingView()
+        if interactor.model == nil {
+            loadingView?.startLoading(view: view)
+        } else {
+            loadingView?.startTinyLoading(view: view)
+        }
+    }
+    
+    func stopLoading() {
+        loadingView?.stopLoading()
+    }
+    
     func updateView() {
+        if interactor.model?.results.isEmpty == true {
+            emptyView.showView(view: container)
+            return
+        }
+        
+        emptyView.hiddenView()
         collectionView.reloadData()
+    }
+    
+    func updateNewItems(indexPaths: [IndexPath]) {
+        collectionView.insertItems(at: indexPaths)
     }
 }
 
@@ -118,7 +164,7 @@ extension MoviesListViewController: UIScrollViewDelegate {
         let offsetY = scrollView.contentOffset.y
         let contentHeight = scrollView.contentSize.height
         if offsetY > (contentHeight - scrollView.frame.size.height) - 60 {
-            interactor.fetchData()
+            interactor.fetchData(searchText: nil)
         }
     }
 }

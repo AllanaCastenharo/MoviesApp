@@ -8,10 +8,15 @@
 import Foundation
 @testable import Movies
 
-final class IntroInteractorSpy: IntroInteracting {
-    private(set) var openMoviesCalled = false
-    
-    func openMovies() {
-        openMoviesCalled = true
+class IntroInteractorSpy: IntroInteractorProtocol {
+    enum Method: Equatable {
+        case openMoviesCalled
     }
+
+    private(set) var receivedMethods: [Method] = []
+
+    func openMovies() {
+        receivedMethods.append(.openMoviesCalled)
+    }
+
 }

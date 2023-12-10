@@ -7,51 +7,62 @@
 
 import UIKit
 
-final class MoviesSearchViewController: MoviesViewController<MoviesSearchInteracting> {
-    
+import UIKit
+
+final class MoviesSearchViewController: MoviesListViewController {
+
     private var searchBar: UISearchBar = {
         let search = UISearchBar()
         search.placeholder = "Busque um filme"
+        search.translatesAutoresizingMaskIntoConstraints = false
         return search
     }()
-    
-    
+
     override func viewDidLoad() {
-        super.viewDidLoad()
+        searchBar.delegate = self
         setupView()
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+
+    override func viewDidAppear(_ animated: Bool) {
+        title = "Busca"
     }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {}
 }
 
-extension MoviesSearchViewController: ViewCode {
-    func buildViewHierarchy() {
+extension MoviesSearchViewController {
+    override func buildViewHierarchy() {
+        super.buildViewHierarchy()
         view.addSubview(searchBar)
     }
-    
-    func setupConstraints() {
-        searchBar.translatesAutoresizingMaskIntoConstraints = false
 
+    override func setupConstraints() {
         NSLayoutConstraint.activate([
             searchBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            searchBar.leftAnchor.constraint(equalTo: view.leftAnchor),
-            searchBar.rightAnchor.constraint(equalTo: view.rightAnchor)
-
-
+            searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            container.topAnchor.constraint(equalTo: searchBar.bottomAnchor),
+            container.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            container.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            container.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            collectionView.topAnchor.constraint(equalTo: container.topAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         ])
-        
     }
-    
-    func setupAdditionalConfiguration() {
+
+    override func setupAdditionalConfiguration() {
+        title = "Busca"
         view.backgroundColor = .moviesColor(.white)
     }
 }
 
-@objc
-extension MoviesSearchViewController {
-    func didTapSearchMovieList() {
-        interactor.openSearchMovies()
+extension MoviesSearchViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        interactor.fetchData(searchText: searchBar.text)
+        view.endEditing(true)
     }
 }

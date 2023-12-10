@@ -7,14 +7,4 @@
 
 import Foundation
 
-protocol MoviesSearchPresenting: AnyObject {
-    func presentSearchMovies()
-}
-
-final class MoviesSearchPresenter: MoviesPresenter<MoviesSearchCoordinating> { }
-
-extension MoviesSearchPresenter: MoviesSearchPresenting {
-    func presentSearchMovies() {
-        coordinator.searchMovies()
-    }
-}
+final class MoviesSearchPresenter: MoviesListPresenter { }

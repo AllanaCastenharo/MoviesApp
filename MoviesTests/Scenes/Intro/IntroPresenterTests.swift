@@ -8,27 +8,13 @@
 import XCTest
 @testable import Movies
 
-final class CoordinatorSpy: IntroCoordinating {
-    var viewController: UIViewController?
-    
-    enum Message: Equatable {
-        case showMoviesCalled
-    }
-    
-    private(set) var receivedMessages: [Message] = []
-    
-    func showMovies() {
-        receivedMessages.append(.showMoviesCalled)
-    }
-}
-
 class IntroPresenterTests: XCTestCase {
     func testPresentMovies_ShouldShowMoviesListScreen() {
         let (sut, coordinatorSpy) = makeSut()
         
         sut.presentMovies()
         
-        XCTAssertEqual(coordinatorSpy.receivedMessages, [.showMoviesCalled])
+        XCTAssertEqual(coordinatorSpy.receivedMethods, [.showMoviesCalled])
     }
 }
 

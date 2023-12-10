@@ -39,12 +39,13 @@ class ImageCache {
             return
         }
         getData(from: url) { data, response, error in
-            guard let data = data, error == nil else {
-                
-                return
+            guard let data = data,
+                error == nil,
+                let image = UIImage(data: data)  else {
+                    return
             }
             
-            completion(.success(UIImage(data: data)!))
+            completion(.success(image))
         }
     }
 }

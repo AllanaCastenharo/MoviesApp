@@ -2,17 +2,26 @@
 //  MoviesListPresenterSpy.swift
 //  MoviesTests
 //
-//  Created by Allana Castenharo Santamaria on 05/06/22.
+//  Created by Allana Castenharo Santamaria on 05/12/23.
 //
 
 import Foundation
 @testable import Movies
 
-class MoviesListPresenterSpy: MoviesListPresenting {
-    enum Message: Equatable {
-
+class MoviesListPresenterSpy: MoviesListPresenterProtocol {
+    enum Method: Equatable {
+        case presentMoviesDetailCalled(model: MoviesModel)
+        case updateViewCalled
     }
 
-    private(set) var receivedMessages: [Message] = []
+    private(set) var receivedMethods: [Method] = []
+    
+    func presentMoviesDetail(model: MoviesModel) {
+        receivedMethods.append(.presentMoviesDetailCalled(model: model))
+    }
+    
+    func updateView() {
+        receivedMethods.append(.updateViewCalled)
+    }
 
 }

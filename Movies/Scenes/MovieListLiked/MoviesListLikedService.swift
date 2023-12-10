@@ -7,15 +7,11 @@
 
 import Foundation
 
-final class MoviesLikedService: MoviesListServicing {
-    func fetch(completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {
+final class MoviesLikedService: MoviesListServiceProtocol {
+    func fetch(page: Int, completion: @escaping (Result<MoviesResponse, NetworkError>) -> Void) {
         if let data = UserDefaults.standard.object(forKey: "likedMovies") as? Data,
            let response = try? JSONDecoder().decode(MoviesResponse.self, from: data) {
             completion(.success(response))
         }
     }
-    
-    
-    
-
 }

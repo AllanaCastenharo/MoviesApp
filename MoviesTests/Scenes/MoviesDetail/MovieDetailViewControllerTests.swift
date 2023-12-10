@@ -2,7 +2,7 @@
 //  MovieDetailViewControllerTests.swift
 //  MoviesTests
 //
-//  Created by Allana Castenharo Santamaria on 04/06/22.
+//  Created by Allana Castenharo Santamaria on 06/12/23.
 //
 
 import XCTest

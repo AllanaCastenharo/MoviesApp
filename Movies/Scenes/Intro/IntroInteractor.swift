@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol IntroInteracting: AnyObject {
+protocol IntroInteractorProtocol: AnyObject {
     func openMovies()
 }
 
-final class IntroInteractor: MoviesInteractor<IntroPresenting> { }
+final class IntroInteractor: MoviesInteractor<IntroPresenterProtocol> { }
 
-extension IntroInteractor: IntroInteracting {
+extension IntroInteractor: IntroInteractorProtocol {
     func openMovies() {
         presenter.presentMovies()
     }

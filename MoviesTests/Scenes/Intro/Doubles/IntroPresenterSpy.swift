@@ -8,15 +8,15 @@
 import Foundation
 @testable import Movies
 
-class IntroPresenterSpy: IntroPresenting {
-    enum Message: Equatable {
+class IntroPresenterSpy: IntroPresenterProtocol {
+    enum Method: Equatable {
         case presentMoviesCalled
     }
 
-    private(set) var receivedMessages: [Message] = []
+    private(set) var receivedMethods: [Method] = []
 
     func presentMovies() {
-        receivedMessages.append(.presentMoviesCalled)
+        receivedMethods.append(.presentMoviesCalled)
     }
 
 }

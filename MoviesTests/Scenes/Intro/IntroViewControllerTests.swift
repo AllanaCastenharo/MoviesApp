@@ -24,6 +24,6 @@ final class IntroViewControllerTests: XCTestCase {
     
     func test_didTapButtonMovieList() {
         sut.didTapButtonMovieList()
-        XCTAssertTrue(interactorSpy.openMoviesCalled)
+        XCTAssertEqual(interactorSpy.receivedMethods, [.openMoviesCalled])
     }
 }

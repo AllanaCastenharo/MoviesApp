@@ -7,7 +7,7 @@
 
 import UIKit
 
-protocol MoviesListCoordinating: AnyObject {
+protocol MoviesListCoordinatorProtocol: AnyObject {
     func showMoviesDetail(model: MoviesModel)
 }
 
@@ -15,7 +15,7 @@ final class MoviesListCoordinator {
     weak var viewController: UIViewController?
 }
 
-extension MoviesListCoordinator: MoviesListCoordinating {
+extension MoviesListCoordinator: MoviesListCoordinatorProtocol {
     func showMoviesDetail(model: MoviesModel) {
         let controller = MovieDetailFactory.make(model: model)
         viewController?.navigationController?.pushViewController(controller, animated: true)

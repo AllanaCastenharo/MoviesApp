@@ -6,11 +6,11 @@
 //
 
 import Foundation
-protocol MovieDetailInteracting: AnyObject {
+protocol MovieDetailInteractorProtocol: AnyObject {
     var model: MoviesModel { get }
 }
 
-final class MovieDetailInteractor: MovieDetailInteracting {
+final class MovieDetailInteractor: MovieDetailInteractorProtocol {
     var model: MoviesModel
     
     init(model: MoviesModel) {

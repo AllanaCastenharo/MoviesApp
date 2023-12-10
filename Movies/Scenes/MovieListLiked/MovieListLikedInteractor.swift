@@ -8,7 +8,7 @@
 import Foundation
 
 class MovieListLikedInteractor: MoviesListInteractor {
-    override func fetchData() {
+    override func fetchData(searchText: String? = nil) {
         model = localStorage.get(key: cacheKey)
         presenter.updateView()
     }

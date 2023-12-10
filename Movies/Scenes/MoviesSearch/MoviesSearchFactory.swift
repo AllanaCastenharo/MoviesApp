@@ -9,12 +9,19 @@ import UIKit
 
 public struct MoviesSearchFactory {
     static func make() -> UIViewController {
-        let coordinator = MoviesSearchCoordinator()
-        let presenter = MoviesSearchPresenter(coordinator: coordinator)
-        let interactor = MoviesSearchInteractor(presenter: presenter)
+        let service = MoviesSearchService()
+        let coordinator = MoviesListCoordinator()
+        let presenter = MoviesListPresenter(coordinator: coordinator)
+        let localStorage = LocalStorage()
+
+        let interactor = MoviesSearchInteractor(
+            service: service,
+            presenter: presenter,
+            localStorage: localStorage)
         let viewController = MoviesSearchViewController(interactor: interactor)
         
         coordinator.viewController = viewController
+        presenter.viewController = viewController
         
         return viewController
     }

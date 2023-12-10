@@ -7,7 +7,7 @@
 
 import UIKit
 
-final class MovieDetailViewController: MoviesViewController<MovieDetailInteracting> {
+final class MovieDetailViewController: MoviesViewController<MovieDetailInteractorProtocol> {
     func downloadImage(from url: URL?) {
         guard let url = url else {
             return
@@ -53,7 +53,9 @@ final class MovieDetailViewController: MoviesViewController<MovieDetailInteracti
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
-        downloadImage(from: URL(string: "https://image.tmdb.org/t/p/w500" + interactor.model.posterPath))
+        if let path = interactor.model.posterPath {
+            downloadImage(from: URL(string: "https://image.tmdb.org/t/p/w500" + path))
+        }
     }
 }
 extension MovieDetailViewController: ViewCode {

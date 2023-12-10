@@ -9,10 +9,11 @@ struct MoviesResponse: Codable {
     var results: [MoviesModel]
 }
 
-struct MoviesModel: Codable {
+struct MoviesModel: Codable, Equatable {
     var id: Int
-    var title: String
+    var title: String?
+    var name: String?
     var overview: String
-    var popularity: Double
-    var posterPath: String
+    var popularity: Double?
+    var posterPath: String?
 }

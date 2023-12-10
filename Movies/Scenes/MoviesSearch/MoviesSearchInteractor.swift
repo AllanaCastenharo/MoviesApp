@@ -7,14 +7,29 @@
 
 import Foundation
 
-protocol MoviesSearchInteracting: AnyObject {
+protocol MoviesSearchInteractorProtocol: AnyObject {
     func openSearchMovies()
 }
 
-final class MoviesSearchInteractor: MoviesInteractor<MoviesSearchPresenting> { }
-
-extension MoviesSearchInteractor: MoviesSearchInteracting {
-    func openSearchMovies() {
-        presenter.presentSearchMovies()
+final class MoviesSearchInteractor: MoviesListInteractor {
+    override func fetchData(searchText: String?) {
+        guard shouldFetch else {
+            return
+        }
+        
+        shouldFetch = false
+        
+        service.fetch(search: searchText ?? "", page: page) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.model = response
+                self?.presenter.updateView()
+                self?.shouldFetch = true
+            case .failure:
+                break
+            }
+        }
     }
 }
+
+

@@ -14,7 +14,7 @@ final class IntroInteractorTests: XCTestCase {
 
         sut.openMovies()
 
-        XCTAssertEqual(presenterSpy.receivedMessages, [.presentMoviesCalled])
+        XCTAssertEqual(presenterSpy.receivedMethods, [.presentMoviesCalled])
     }
 }
 

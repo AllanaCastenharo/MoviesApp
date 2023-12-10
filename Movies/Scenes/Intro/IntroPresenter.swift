@@ -7,13 +7,13 @@
 
 import Foundation
 
-protocol IntroPresenting: AnyObject {
+protocol IntroPresenterProtocol: AnyObject {
     func presentMovies()
 }
 
-final class IntroPresenter: MoviesPresenter<IntroCoordinating> { }
+final class IntroPresenter: MoviesPresenter<IntroCoordinatorProtocol> { }
 
-extension IntroPresenter: IntroPresenting {
+extension IntroPresenter: IntroPresenterProtocol {
     func presentMovies() {
         coordinator.showMovies()
     }

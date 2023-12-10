@@ -7,17 +7,24 @@
 
 import Foundation
 
-protocol MoviesListPresenting: AnyObject {
+protocol MoviesListPresenterProtocol: AnyObject {
     func presentMoviesDetail(model: MoviesModel)
     func updateView()
+    func updateNewItems(indexPaths: [IndexPath])
+    func startLoading()
+    func stopLoading()
 }
 
-final class MoviesListPresenter: MoviesPresenter<MoviesListCoordinating> {
-    weak var viewController: MovieListDisplaying?
-
+class MoviesListPresenter: MoviesPresenter<MoviesListCoordinatorProtocol> {
+    weak var viewController: MovieListViewControllerProcotol?
+ 
 }
 
-extension MoviesListPresenter: MoviesListPresenting {
+extension MoviesListPresenter: MoviesListPresenterProtocol {
+    func updateNewItems(indexPaths: [IndexPath]) {
+        viewController?.updateNewItems(indexPaths: indexPaths)
+    }
+    
     func presentMoviesDetail(model: MoviesModel) {
         coordinator.showMoviesDetail(model: model)
 
@@ -25,5 +32,13 @@ extension MoviesListPresenter: MoviesListPresenting {
     
     func updateView() {
         viewController?.updateView()
+    }
+    
+    func startLoading() {
+        viewController?.startLoading()
+    }
+    
+    func stopLoading() {
+        viewController?.stopLoading()
     }
 }
